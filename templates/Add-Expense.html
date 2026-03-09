@@ -1,0 +1,15 @@
+{% comment %} cur.execute(query, (userID,cID,description,Amount,expenseDate)) {% endcomment %}
+{% extends "base.html" %}
+{% block title %}Add Expense{% endblock %}
+{% block content %}
+    <h2>Add Expense</h2>
+    <form method="POST" action="/add-expense">
+        <label for="description">Description:</label>
+        <textarea id="description" name="description" required></textarea><br><br>
+        <label for="amount">Amount:</label>
+        <input type="number" id="amount" name="amount" step="0.01" required><br><br>
+        <label for="expenseDate">Date:</label>
+        <input type="date" id="expenseDate" name="expenseDate" required><br><br>
+        <input type="submit" value="Add Expense">
+    </form>
+{% endblock %}

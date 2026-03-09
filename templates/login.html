@@ -12,6 +12,9 @@
         <input type="password" id="password" name="password" required><br><br>
         <input type="submit" value="Login">
     </form>
+    {% if error %}
+        <p style="color: red;" class="Errors">{{ error }}</p>
+    {% endif %}
     <a href="/register">Don't have an account? Register here.</a>
     </div>
 {% endblock %}

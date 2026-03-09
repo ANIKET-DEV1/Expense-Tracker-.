@@ -6,15 +6,20 @@
     <h2>Register</h2>
     <div class="Register">
     <form method="POST" action="/register">
+        <label for="email">Email:</label>
+        <input type="text" id="email" name="email" pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$" required><br><br>
         <label for="username">Username:</label>
         <input type="text" id="username" name="username" required><br><br>
         <label for="password">Password:</label>
         <input type="password" id="password" name="password" required><br><br>
-        <label for="password">Confirm Password:</label>
-        <input type="Cpassword" id="Cpassword" name="Cpassword" required><br><br>
-        
+        <label for="Cpassword">Confirm Password:</label>
+        <input type="password" id="Cpassword" name="Cpassword" required><br><br>
+
         <input type="submit" value="Register">
     </form>
+    {% if error %}
+        <p style="color: red;" class="Errors">{{ error }}</p>
+    {% endif %}
     <a href="/login">Already have an account? Login here.</a>
     </div>
 {% endblock %}

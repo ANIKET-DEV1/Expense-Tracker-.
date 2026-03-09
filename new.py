@@ -1,6 +1,6 @@
 import pymysql as sql
 
-
+from werkzeug.security import check_password_hash,generate_password_hash
 class Helper:
     def __init__(self):
         print("Connecting to database...")
@@ -8,7 +8,7 @@ class Helper:
             host="localhost",
             user="root",
             passwd="Awesome123.",
-            database="Usepython"
+            database="ExpenseTracker"
         )
     
 
@@ -59,18 +59,28 @@ class Helper:
         cur.close()
         print('Connected!')
 
-    def insert_user(self, username, email):
-        print("insert_user called")   
+    def insert_user(self, username, email, password):
+        # print("insert_user called")   
         try:
+
             cur = self.db.cursor()
-            query = "INSERT INTO users(username, email) VALUES (%s, %s)"
+            query="Select * from users where username=%s or email=%s"
             cur.execute(query, (username, email))
+            if cur.fetchone():
+                return 2
+        
+            query = "INSERT INTO users(username, email, password) VALUES (%s, %s, %s)"
+            password = generate_password_hash(password)
+            cur.execute(query, (username, email, password))
             self.db.commit()
-            print(f"{username} added successfully!")
+            # print(f"{username} added successfully!")
+            return True
         except Exception as e:
             print("Error:", e)
+            return False
         finally:
             cur.close()
+
     def select_user(self,Tablename):
         print("Select called")   
         try:
@@ -84,14 +94,17 @@ class Helper:
         finally:
             cur.close()
     
-    def Auth(self,username) -> int:  
+    def Auth(self,username,password) -> int:  
         try:
             cur = self.db.cursor()
-            query = "Select * from users"
-            cur.execute(query)
-            for row in cur:
-                if username in row:
-                    return row[0]
+            query = "Select userID,password from users where username=%s "
+            cur.execute(query,username)
+            result = cur.fetchone()
+            if result:
+                userID=result[0]
+                stored_password=result[1]
+                if check_password_hash(stored_password, password): 
+                    return userID  
             return 0
         except Exception as e:
             print("Error:", e)
