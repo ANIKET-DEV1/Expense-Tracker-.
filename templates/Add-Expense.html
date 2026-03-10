@@ -1,6 +1,5 @@
-{% comment %} cur.execute(query, (userID,cID,description,Amount,expenseDate)) {% endcomment %}
 {% extends "base.html" %}
-{% block title %}Add Expense{% endblock %}
+{% block title %}New Spend{% endblock %}
 {% block content %}
     <h2>Add Expense</h2>
     <form method="POST" action="/add-expense">
@@ -12,6 +11,8 @@
             {% for category in categories %}
                 <option value="{{ category }}">{{ category }}</option>
             {% endfor %}
+            <br><br>
+        </select><br><br>
         <label for="amount">Amount:</label>
         <input type="number" id="amount" name="amount" step="0.01" required><br><br>
         <label for="expenseDate">Date:</label>

@@ -110,21 +110,18 @@ class Helper:
 
     def insert_catogory(self,userID, cName): 
         try:
+            raw_categories = self.Category_exist(userID)
+            existing_names = [row[0] for row in raw_categories]
+            if cName in existing_names:
+                return 0
             cur = self.db.cursor()
-            query = "Select * from category where userID=%s"
-            cur.execute(query,userID)
-            for row in cur:
-                if cName in row:
-                    return row[0]
-            print("Adding...")
             query = "INSERT INTO category(userID,cName) VALUES (%s,%s)"
             cur.execute(query, (userID,cName))
             self.db.commit()
-            print(f"{cName} added successfully!")
-            return 1
+            return True
         except Exception as e:
             print("Error:", e)
-            return 0
+            return 2
         finally:
             cur.close() 
 
@@ -155,18 +152,18 @@ class Helper:
         finally:
             cur.close()
 
-    def get_userID(self,username):
-        try:
-            cur = self.db.cursor()
-            query = "Select * from users where username=%s"
-            cur.execute(query,(username))
-            for row in cur:
-                return row[0]
-            return 0
-        except Exception as e:
-            print("Error:", e)
-        finally:
-            cur.close() 
+    # def get_userID(self,username):
+    #     try:
+    #         cur = self.db.cursor()
+    #         query = "Select * from users where username=%s"
+    #         cur.execute(query,(username))
+    #         for row in cur:
+    #             return row[0]
+    #         return 0
+    #     except Exception as e:
+    #         print("Error:", e)
+    #     finally:
+    #         cur.close() 
     
     def Category_get_ID(self,name,user_id):
         try:

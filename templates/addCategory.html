@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{% block title %} Tags Manager{% endblock title %}
+{% block content %}
+    <h2>Add Expense</h2>
+    <form method="POST" action="/TagsManager">
+    <label for="categoryname">New Category Name:</label>
+    <input type="text" id="categoryname" name="categoryname" placeholder="e.g., Utilities, Groceries" required>
+    {% if error %}
+        <p style="color: red;" class="Errors">{{ error }}</p>
+    {% endif %}
+    <button type="submit">Add Category</button>
+</form>
+
+{% endblock %}
