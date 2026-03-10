@@ -1,5 +1,4 @@
 import pymysql as sql
-
 from werkzeug.security import check_password_hash,generate_password_hash
 class Helper:
     def __init__(self):
@@ -13,12 +12,13 @@ class Helper:
     
 
         queries = [
-            """CREATE TABLE IF NOT EXISTS users(
-                userID INT AUTO_INCREMENT PRIMARY KEY,
-                username VARCHAR(50) NOT NULL,
-                email VARCHAR(100) NOT NULL UNIQUE,
-                created_at DATETIME DEFAULT CURRENT_TIMESTAMP
-            )""",
+           """CREATE TABLE IF NOT EXISTS users(
+    userID INT AUTO_INCREMENT PRIMARY KEY,
+    username VARCHAR(50) NOT NULL unique,
+    email VARCHAR(100) not null unique,
+    password varchar(255) not null,
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+);""",
 
             """CREATE TABLE IF NOT EXISTS category(
                 cID INT AUTO_INCREMENT PRIMARY KEY,
@@ -59,21 +59,17 @@ class Helper:
         cur.close()
         print('Connected!')
 
-    def insert_user(self, username, email, password):
-        # print("insert_user called")   
+    def insert_user(self, username, email, password): 
         try:
-
             cur = self.db.cursor()
             query="Select * from users where username=%s or email=%s"
             cur.execute(query, (username, email))
             if cur.fetchone():
                 return 2
-        
             query = "INSERT INTO users(username, email, password) VALUES (%s, %s, %s)"
             password = generate_password_hash(password)
             cur.execute(query, (username, email, password))
             self.db.commit()
-            # print(f"{username} added successfully!")
             return True
         except Exception as e:
             print("Error:", e)
@@ -132,18 +128,15 @@ class Helper:
         finally:
             cur.close() 
 
-    def Category_exist(self,userID,cName) -> int:  
+    def Category_exist(self,userID) :  
         try:
             cur = self.db.cursor()
-            query = "Select * from category where userID=%s"
-            cur.execute(query,userID)
-            for row in cur:
-                if cName in row:
-                    return row[0]
-            return 0
+            query = "Select cName from category where userID=%s"
+            result =cur.fetchall(query,(userID,))
+            return result
         except Exception as e:
             print("Error:", e)
-            return 0
+            return []
         finally:
             cur.close() 
     

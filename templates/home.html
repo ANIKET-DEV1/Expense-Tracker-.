@@ -3,5 +3,12 @@
 
 {% block content %}
 <h1>Home</h1>
+<p>Welcome to the home page!</p>
+{% if session.get("username") %}
+    <p>Hello, {{ session.get("username") }}! You are logged in.</p>
+    <a href="/logout">Logout</a>
+{% else %}
+    <p>You are not logged in. Please <a href="/login">login</a> or <a href="/register">register</a>.</p>
+{% endif %}
 
 {% endblock content %}

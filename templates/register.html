@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 
-{% block title %}Login{% endblock %}
+{% block title %}Register{% endblock %}
 
 {% block content %}
     <h2>Register</h2>
@@ -18,7 +18,7 @@
         <input type="submit" value="Register">
     </form>
     {% if error %}
-        <p style="color: red;" class="Errors">{{ error }}</p>
+        <p style="color: red; " class="Errors">{{ error }}</p>
     {% endif %}
     <a href="/login">Already have an account? Login here.</a>
     </div>
