@@ -80,6 +80,7 @@ def add_expenses():
             if error_msg:
                 return render_template("Add-Expense.html", categories=categories, error=error_msg)
         return render_template("Add-Expense.html", categories=categories)
+    return redirect(url_for("auth.login"))
         
 @view.route('/TagsManager', methods=["GET", "POST"])
 def tags_manager():
@@ -87,15 +88,12 @@ def tags_manager():
         error=None
         if request.method == "POST":
             category_name = request.form.get("categoryname").strip().capitalize()
-            if category_name:
-                result=helper.insert_category(session["user_id"], category_name)
-                if result == 0:
-                    error = "Category already exists."
-                elif result == 2:                    
-                    error = "Failed to add category. Please try again."
-                else:
-                    return redirect(url_for("view.tags_manager"))
+            result = helper.insert_catogory(session["user_id"], category_name)
+            if result == 0:
+                error = "Category already exists."
+            elif result == 2:
+                error = "Failed to add category. Please try again."
             else:
-                error = "Category name cannot be empty."
-        return render_template("TagsManager.html", error=error)
+                return redirect(url_for("view.tags_manager"))
+        return render_template("addCategory.html", error=error)
     return redirect(url_for("auth.login"))

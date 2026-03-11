@@ -2,7 +2,7 @@
 {% block title %}New Spend{% endblock %}
 {% block content %}
     <h2>Add Expense</h2>
-    <form method="POST" action="/add-expense">
+    <form method="POST" action="/Add-Expense">
         <label for="description">Description:</label>
         <textarea id="description" name="description" required></textarea><br><br>
         <label for="category">Category:</label>
@@ -18,5 +18,8 @@
         <label for="expenseDate">Date:</label>
         <input type="date" id="expenseDate" name="expenseDate" required><br><br>
         <input type="submit" value="Add Expense">
+        {% if error %}
+            <p style="color: red;" class="Errors">{{ error }}</p>
+        {% endif %}
     </form>
 {% endblock %}

@@ -110,11 +110,12 @@ class Helper:
 
     def insert_catogory(self,userID, cName): 
         try:
+            cur = self.db.cursor()
+
             raw_categories = self.Category_exist(userID)
             existing_names = [row[0] for row in raw_categories]
             if cName in existing_names:
                 return 0
-            cur = self.db.cursor()
             query = "INSERT INTO category(userID,cName) VALUES (%s,%s)"
             cur.execute(query, (userID,cName))
             self.db.commit()
@@ -128,8 +129,9 @@ class Helper:
     def Category_exist(self,userID) :  
         try:
             cur = self.db.cursor()
-            query = "Select cName from category where userID=%s"
-            result =cur.fetchall(query,(userID,))
+            query = "SELECT cName FROM category WHERE userID=%s"
+            cur.execute(query, (userID,))  # 1. Execute first!
+            result = cur.fetchall()
             return result
         except Exception as e:
             print("Error:", e)
