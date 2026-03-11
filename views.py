@@ -63,7 +63,7 @@ def add_expenses():
             description=request.form.get("description")
             category=request.form.get("category").capitalize().strip()
             date=request.form.get("expenseDate")
-            result = opera.verify_expense_deatils(session["user_id"], description, amount, date, category)
+            result = helper.verify_expense_deatils(session["user_id"], description, amount, date, category)
             error_msg = None
             if result == 2:
                 error_msg = "Invalid amount. Please enter a positive number."
@@ -71,12 +71,15 @@ def add_expenses():
                 error_msg = "Description cannot be empty."
             elif result == 4:
                 error_msg = "Invalid date. Please enter a valid date in the format YYYY-MM-DD."
-            elif result == 5:
-                error_msg = "Database error. Please try again later."
             elif result == 6:
                 error_msg = "Category does not exist. Please select a valid category."
             else:
-                    return redirect(url_for("view.home"))
+                    try:
+                        category_id = helper.Category_get_ID(category, session["user_id"])
+                        helper.Add_Expense(session["user_id"], description, float(amount), date, category_id)
+                        return redirect(url_for('view.home'))
+                    except Exception as e :
+                        error_msg="Database Error!!"
             if error_msg:
                 return render_template("Add-Expense.html", categories=categories, error=error_msg)
         return render_template("Add-Expense.html", categories=categories)
@@ -96,4 +99,27 @@ def tags_manager():
             else:
                 return redirect(url_for("view.tags_manager"))
         return render_template("addCategory.html", error=error)
+    return redirect(url_for("auth.login"))
+
+@view.route('/delete-expense/<int:expense_id>', methods=["POST"])
+def delete(expense_id):
+    if "user_id" in session:
+        result = helper.delete_expense(expense_id, session["user_id"])
+        if not result:
+            error = "Failed to delete expense. Please try again."
+            return render_template("viewexpense.html", error=error)
+        return redirect(url_for('view.cashflow'))
+    return redirect(url_for("auth.login"))
+
+@view.route('/cashflow')
+def cashflow():
+    if "user_id" in session:
+        selected = request.args.get("Wise", "all")
+        if selected == "all":
+            expenses = helper.view_Expenses(session["user_id"])
+        else:
+            month = int(selected)
+            year = datetime.now().year
+            expenses = helper.month_Expenses(session["user_id"], month, year)
+        return render_template("viewexpense.html", expenses=expenses)
     return redirect(url_for("auth.login"))

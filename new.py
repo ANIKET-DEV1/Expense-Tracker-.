@@ -1,3 +1,5 @@
+from datetime import date, datetime
+
 import pymysql as sql
 from werkzeug.security import check_password_hash,generate_password_hash
 class Helper:
@@ -187,37 +189,79 @@ class Helper:
                     inner join category c
                     on e.cID=c.cID
                     where e.userID=%s
-                    order by expenseDate'''
+                    order by expenseDate Desc'''
             cur=self.db.cursor()
-            cur.execute(query,(userID))
+            cur.execute(query,(userID,))
             rows = cur.fetchall()
-            return rows
+            if rows:
+                return rows
+            return []
         except Exception as e:
             print('Error',e)
-            return 
+            return []
         finally:
             cur.close()
 
+    def delete_expense(self, expenseID, userID):
+        cur = None
+        try:
+            cur = self.db.cursor()
+            query = "DELETE FROM expenses WHERE expenseID = %s AND userID = %s"
+            cur.execute(query, (expenseID, userID))
+            self.db.commit()
+            return True 
+        except Exception as e:
+            print("Error in delete_expense:", e)
+            return False 
+        finally:
+            if cur:
+                cur.close()
+             
+            
     def month_Expenses(self,userID,month,year):
         try: 
-            query='''Select c.cName,sum(e.Amount) as total_amount from expenses e
+            query='''Select e.expenseID,c.cName,e.description,e.Amount,e.expenseDate from expenses e
                     inner join category c
                     on e.cID=c.cID
                     where e.userID=%s
                     AND YEAR(e.expenseDate) = %s
                     AND MONTH(e.expenseDate) = %s
-                    GROUP BY c.cName
-                    ORDER BY total_amount DESC'''
+                    ORDER BY e.expenseDate DESC'''
             cur=self.db.cursor()
             cur.execute(query,(userID,year,month))
             rows = cur.fetchall()
             return rows
         except Exception as e:
             print('Error',e)
-            return 
+            return []
         finally:
             cur.close()
-        
+
+    def verify_expense_deatils(self, user_id, description, amount, edate, cName):
+        try:
+            amount=float(amount)
+        except ValueError:
+            return 2
+        try:
+            edate = datetime.strptime(edate, '%Y-%m-%d').date()
+        except (ValueError, TypeError):
+            return 4
+        if cName is None:
+            return 6
+        if amount <= 0:
+            return 2
+        if not description.strip():
+            return 3
+        if edate > date.today():
+                print("Expense date cannot be in the future")
+                return 4
+        try:
+                category_id = self.db.Category_get_ID(cName, user_id)
+                self.db.Add_Expense(user_id, description, amount, edate, category_id)
+                return 1
+        except Exception as e:
+                return 5
+            
     def new_add_debt(self,userID,PersonName,amount,debtType,debtStatus,DebtDate):
         try:
             cur=self.db.cursor()

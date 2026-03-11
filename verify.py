@@ -23,36 +23,12 @@ class operation():
         if edate > date.today():
                 print("Expense date cannot be in the future")
                 return 4
-        try:
-                category_id = self.db.Category_get_ID(cName, user_id)
-                self.db.Add_Expense(user_id, description, amount, edate, category_id)
-                return 1
-        except Exception as e:
-                return 5
+        return True
             
-    def viewExpense(self,userID):
-        try:
-            getrow=self.db.view_Expenses(userID)
-            print("Fetching Data..")
-            if getrow:
-                print(f"\n\n{'='*32} EXPENSE LIST {'='*32}")
-                print(f"{'ID':<5} {'Category':<15} {'Description':<25} {'Amount':>16} {2*' '} {'Date'}{2*' '}")
-                print("-" * 80)
-                a=0
-                for row in getrow:
-                    print(f"{row[0]:<5} {row[1]:<15} {row[2]:<25} {row[3]:>16.2f}₹ {2*' '}{row[4]}{2*' '}")
-                total = sum(r[3] for r in getrow)
-                print("-" * 80)
-                print(f"{'Total':<65} {total:.2f}₹")
-                print("-" * 80)                
-            else:
-                 print("Nothing to Show!....")   
-        except Exception as e:
-             print(e)
-             
+   
 
          
-    def monthly_expemse(self,userID):
+    def monthly_expense(self,userID):
         choice = input("Press ENTER for current month or type 'custom': ")
         if choice == "":
             today = date.today()
