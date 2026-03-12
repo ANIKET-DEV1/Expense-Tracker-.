@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+{% block title %}Debt Management{% endblock title %}
+{% block content %}
+    <h2>Debt Management</h2>
+    <p>This is the Debt Management page. You can manage your debts here.</p>
+    {% comment %} 1. Add Debt
+2. View Pending Debts
+3. Mark Debt as Paid
+0. Back {% endcomment %}
+<h2>ADD DEBT<h2>
+    <form method="POST" action="/debtManagement">
+      <label for="personName">Person Name:</label>
+    <input type="text" id="personName" name="personName" required>
+      <label for="Amount">Person Name:</label>
+    <input type="number" id="Amount" name="Amount" step=0.01 required>
+      <label for="Debttype">Select to DebtType:</label>
+        
+        <select id="Debttype" name="Debttype" required>
+            <option value="lent" {% if selected == 'lent'%}selected{% endif %}>Lent</option>
+            <option value="borrowed" {% if selected == 'borrowed' %}selected{% endif %}>Borrowed</option>
+        </select>
+         <label for="DebtStatus">Select to Debt Status:</label>
+        
+        <select id="DebtStatus" name="DebtStatus" required>
+            <option value="paid" {% if selected == 'paid'%}selected{% endif %}>Paid</option>
+            <option value="pending" {% if selected == 'pending'%}selected{% endif %}>Pending</option>
+        </select>
+        <label for="DebtDate">DebtDate:</label>
+        <input type="date" id="DebtDate" name="DebtDate" required><br><br>
+        {% if error %}
+        <p style="color: red;" class="Errors">{{ error }}</p>
+        {% endif %}
+        <input type="submit" value="Add Debt">
+    </form>
+
+{% endblock %}

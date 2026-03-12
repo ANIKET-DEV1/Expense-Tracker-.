@@ -123,3 +123,17 @@ def cashflow():
             expenses = helper.month_Expenses(session["user_id"], month, year)
         return render_template("viewexpense.html", expenses=expenses)
     return redirect(url_for("auth.login"))
+
+@view.route('/debtmanagement',methods=['GET','POST'])
+def debt_management():
+    if "user_id" in session:
+        if request.method == "POST":
+            person_name = request.form.get("personName").strip().capitalize()
+            amount = request.form.get("Amount").strip()
+            debt_type = request.form.get("Debttype")
+            debt_status = request.form.get("DebtStatus")
+            debt_date = request.form.get("DebtDate")
+            
+
+        return render_template("debtmanagement.html")
+    return redirect(url_for("auth.login"))

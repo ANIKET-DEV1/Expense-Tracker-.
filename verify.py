@@ -59,46 +59,24 @@ class operation():
              print('Error:',e)
 
 
-    def add_debt(self, user_id):
-        person_name = input("Enter name of person: ").strip().capitalize()
-        while True:
+    def add_debt(self, user_id,person_name, amount, debt_type, debt_status, date_input):
             try:
-                amount = float(input("Amount: "))
-                if amount <= 0:
-                    print(" Amount must be greater than 0")
-                    continue
-                break
+                amount = float(amount)
             except ValueError:
-                print(" Enter a valid number")
-        while True:
-            debt_type = input("Lent or Borrowed: ").strip().lower()
-            if debt_type in ("lent", "borrowed"):
-                break
-            print(" Enter only 'lent' or 'borrowed'")
-        while True:
-            debt_status = input("Pending or Paid: ").strip().lower()
-            if debt_status in ("pending", "paid"):
-                break
-            print(" Enter only 'pending' or 'paid'")
-        while True:
-            date_input = input("Enter Date (YYYY-MM-DD): ").strip()
+                return 2
             try:
-                debt_date = datetime.strptime(date_input, "%Y-%m-%d").date()
-                break
-            except ValueError:
-                print(" Invalid date format")
-        try:
-            self.db.new_add_debt(
-                user_id,
-                person_name,
-                amount,
-                debt_type,
-                debt_status,
-                debt_date
-            )
-            print(" Debt added successfully")
-        except Exception as e:
-            print(" Database Error:", e)
+                date_input = datetime.strptime(date_input, '%Y-%m-%d').date()
+            except (ValueError, TypeError):
+                return 4
+            
+            if debt_type is None or debt_status is None:
+                return 5
+            if amount <= 0:
+                return 2
+            if date_input > date.today():
+                 return 4
+            if not person_name.strip():
+                return 3
 
                     
     def view_debt(self,userID):
