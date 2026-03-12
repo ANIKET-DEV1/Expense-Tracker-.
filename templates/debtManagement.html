@@ -3,24 +3,18 @@
 {% block content %}
     <h2>Debt Management</h2>
     <p>This is the Debt Management page. You can manage your debts here.</p>
-    {% comment %} 1. Add Debt
-2. View Pending Debts
-3. Mark Debt as Paid
-0. Back {% endcomment %}
 <h2>ADD DEBT<h2>
-    <form method="POST" action="/debtManagement">
+    <form method="POST" action="{{ url_for('view.debt_management') }}">
       <label for="personName">Person Name:</label>
     <input type="text" id="personName" name="personName" required>
-      <label for="Amount">Person Name:</label>
+      <label for="Amount">Amount:</label>
     <input type="number" id="Amount" name="Amount" step=0.01 required>
       <label for="Debttype">Select to DebtType:</label>
-        
         <select id="Debttype" name="Debttype" required>
             <option value="lent" {% if selected == 'lent'%}selected{% endif %}>Lent</option>
             <option value="borrowed" {% if selected == 'borrowed' %}selected{% endif %}>Borrowed</option>
         </select>
-         <label for="DebtStatus">Select to Debt Status:</label>
-        
+        <label for="DebtStatus">Select to Debt Status:</label>
         <select id="DebtStatus" name="DebtStatus" required>
             <option value="paid" {% if selected == 'paid'%}selected{% endif %}>Paid</option>
             <option value="pending" {% if selected == 'pending'%}selected{% endif %}>Pending</option>
@@ -32,5 +26,45 @@
         {% endif %}
         <input type="submit" value="Add Debt">
     </form>
+    {% if  debts %}
+      <h2>Pending Debts</h2>
+      <table border="1">
+        <tr>
+            <th>Debt ID</th>
+            <th>Person Name</th>
+            <th>Amount</th>
+            <th>Debt Type</th>
+            <th>Debt Status</th>
+            <th>Debt Date</th>
+            <th>Change Status</th>
+            <th>Actions</th>
+        </tr>
+    {% for d in debts %}
+      <tr>
+        <td>{{ d[0] }}</td>
+        <td>{{ d[1] }}</td>
+        <td>₹{{ d[2] }}</td>
+        <td>{{ d[3] }}</td>
+        <td>{{ d[4] }}</td>
+        <td>{{ d[5] }}</td>
+        <td>
+          {% if d[4]=="paid"%}
+            <form action="{{ url_for('view.change_debt', debt_id=d[0]) }}" method="POST" style="display:inline;">
+            <button type="submit" class="Change">Pending</button>
+              </form>
+          {% else %}
+              <form action="{{ url_for('view.change_debt', debt_id=d[0]) }}" method="POST" style="display:inline;">
+            <button type="submit" class="Change">Paid</button>
+          </form>
+          {% endif %}
+        </td>
+        <td>
+          <form action="{{ url_for('view.delete_debt', debt_id=d[0]) }}" method="POST" style="display:inline;">
+            <button type="submit" class="delbtn">Delete</button>
+          </form>
+          </td>
+      </tr>
+    {% endfor %}
+    {% endif %}
 
 {% endblock %}

@@ -216,6 +216,20 @@ class Helper:
         finally:
             if cur:
                 cur.close()
+    def delete_debt(self, debtID, userID):
+        cur = None
+        try:
+            cur = self.db.cursor()
+            query = "DELETE FROM debt WHERE debtID = %s AND userID = %s"
+            cur.execute(query, (debtID, userID))
+            self.db.commit()
+            return True 
+        except Exception as e:
+            print("Error in delete_debt:", e)
+            return False 
+        finally:
+            if cur:
+                cur.close()
              
             
     def month_Expenses(self,userID,month,year):
@@ -268,9 +282,10 @@ class Helper:
             query="INSERT INTO debt(userID,PersonName,amount,debtType,debtStatus,DebtDate) VALUES (%s,%s,%s,%s,%s,%s)"
             cur.execute(query,(userID,PersonName,amount,debtType,debtStatus,DebtDate))
             self.db.commit()
+            return True
         except Exception as e:
             print('new: ',e)
-            return 
+            return False
         finally:
             cur.close()
     
@@ -278,12 +293,12 @@ class Helper:
         try:
             cur=self.db.cursor()
             query='''Select debtID,PersonName,amount,debtType,debtStatus,DebtDate from debt where userID=%s'''
-            cur.execute(query,(userID))
+            cur.execute(query,(userID,))
             row=cur.fetchall()
             return row
         except Exception as e:
             print('new: ',e)
-            return 
+            return []
         finally:
             cur.close()
 
@@ -291,21 +306,19 @@ class Helper:
         try:
             cur=self.db.cursor()
             query = """
-            UPDATE debt
-            SET debtStatus = 'paid'
-            WHERE userID = %s
-             AND debtID = %s
-             AND debtStatus = 'pending'
+            UPDATE debt 
+            SET debtStatus = CASE 
+            WHEN debtStatus = 'pending' THEN 'paid' 
+            ELSE 'pending' 
+            END 
+            WHERE debtID = %s AND userID = %s
             """
-            cur.execute(query, (userID, debtID))
+            cur.execute(query, (debtID, userID,))
             self.db.commit()
-            if cur.rowcount == 0:
-                print("No row updated (already paid or not found)")
-            else:
-                print("Debt updated successfully")
+            return True
         except Exception as e:
             print("upadate debt error:",e)
-            return
+            return False
         finally:
             cur.close()
 

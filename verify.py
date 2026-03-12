@@ -74,30 +74,10 @@ class operation():
             if amount <= 0:
                 return 2
             if date_input > date.today():
-                 return 4
+                 return 6
             if not person_name.strip():
                 return 3
 
-                    
-    def view_debt(self,userID):
-        try:
-            row=self.db.display_debt(userID)
-            if row:
-                print(f"\n\n{'='*34} DEBT LIST {'='*34}")
-                print(f"{'ID':<5} {'Person':>15} {'Amount':>15} {'Debt Type':>15} {'Debt Status':>15} {2*' '} {'Date'}{2*' '}")
-                print("-" * 80)
-                for r in row:
-                    print(f"{r[0]:<5} {r[1]:>15} {r[2]:>15.2f}₹ {r[3]:>15} {r[4]:>15} {2*' '} {r[5]}{2*' '}")
-                total=sum(r[2] for r in row)
-                print("-" * 80)
-                print(f"{'Total':<60}{total:.2f}₹")
-            else:
-                 print('Nothing to display')
-        except Exception as e:
-             print('Error:',e) 
-               
-                     
-        
     def Mark_debt(self, userID):
         try:
             debtId = int(input("Enter DebtID: "))

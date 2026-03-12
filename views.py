@@ -125,15 +125,64 @@ def cashflow():
     return redirect(url_for("auth.login"))
 
 @view.route('/debtmanagement',methods=['GET','POST'])
+@view.route('/debtmanagement', methods=['GET', 'POST'])
 def debt_management():
     if "user_id" in session:
+        error_msg = None
         if request.method == "POST":
-            person_name = request.form.get("personName").strip().capitalize()
-            amount = request.form.get("Amount").strip()
-            debt_type = request.form.get("Debttype")
-            debt_status = request.form.get("DebtStatus")
-            debt_date = request.form.get("DebtDate")
-            
+            person_name = request.form.get("personName", "").strip().capitalize()
+            amount = request.form.get("Amount", "").strip()
+            debt_type = request.form.get("Debttype", "")
+            debt_status = request.form.get("DebtStatus", "")
+            debt_date = request.form.get("DebtDate", "")
 
-        return render_template("debtmanagement.html")
+            result = opera.add_debt(session["user_id"], person_name, amount, debt_type, debt_status, debt_date)
+            
+            if result == 2:
+                error_msg = "Invalid amount."
+            elif result == 3:
+                error_msg = "Fill Person Name."
+            elif result == 4:
+                error_msg = "Invalid date. Please enter a valid date in the format YYYY-MM-DD."
+            elif result == 5:
+                error_msg = "Please select valid options for debt type and status."
+            elif result == 6:
+                error_msg = "Debt date cannot be in the future."
+            else:
+                try:
+                    helper.new_add_debt(session["user_id"], person_name, amount, debt_type, debt_status, debt_date)
+                    return redirect(url_for('view.debt_management'))
+                    
+                except Exception as e:
+                    print("Error inserting debt:", e)
+                    error_msg = "Server Error, please try again!"
+
+        try:
+            debts = helper.display_debt(session["user_id"])
+        except Exception as e:
+            print("Error fetching debts:", e)
+            debts = []
+            error_msg = "Couldn't fetch debts. Please try again."
+
+        return render_template("debtManagement.html", debts=debts, error=error_msg)
+        
     return redirect(url_for("auth.login"))
+
+@view.route('/delete-debt/<int:debt_id>', methods=["POST"])
+def delete_debt(debt_id):
+    if "user_id" in session:
+        result = helper.delete_debt(debt_id, session["user_id"])
+        if not result:
+            error = "Failed to delete debt. Please try again."
+            return render_template("debtManagement.html", error=error, debts=helper.display_debt(session["user_id"]))
+        return redirect(url_for('view.debt_management'))
+    return redirect(url_for("auth.login"))
+@view.route('/change_debt/<int:debt_id>',methods=["POST"])
+def change_debt(debt_id):
+    if "user_id" in session:
+        result = helper.update_debt(debt_id, session["user_id"])
+        if not result:
+            error = "Failed to Change debt. Please try again."
+            return render_template("debtManagement.html", error=error, debts=helper.display_debt(session["user_id"]))
+        return redirect(url_for('view.debt_management'))
+    return redirect(url_for('auth.login'))
