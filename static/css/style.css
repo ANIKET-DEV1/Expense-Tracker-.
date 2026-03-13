@@ -570,13 +570,7 @@ max-width:1200px;
 margin:auto;
 width:100%;
 }
-/* 
 
-========================\
-       RESPONSIVE|      -|
-========================/
-
-*/
 
 /* FORM WRAPPER */
 
@@ -877,34 +871,225 @@ cursor:pointer;
 .change-btn:hover{
 opacity:0.9;
 }
+/* =========================
+TABLET (≤1024px)
+========================= */
+
+@media (max-width:1024px){
+
+.page-container{
+padding:110px 25px 40px;
+}
+
+.navbar{
+width:95%;
+padding:14px 22px;
+}
+
+.cards{
+grid-template-columns:repeat(auto-fit,minmax(200px,1fr));
+gap:18px;
+}
+
+.form-card,
+.Register,
+.debt-form-card{
+width:100%;
+max-width:420px;
+}
+
+.info-card{
+max-width:90%;
+}
+
+}
+
+/* =========================
+MOBILE (≤768px)
+========================= */
+
 @media (max-width:768px){
+
+/* NAVBAR */
 
 .navbar{
 flex-direction:column;
 gap:10px;
-padding:16px;
+padding:14px 18px;
+top:10px;
 }
 
 .nav-left{
 flex-wrap:wrap;
 justify-content:center;
-gap:18px;
+gap:16px;
 }
 
 .nav-right{
 justify-content:center;
 }
 
-.page-container{
-padding:120px 20px 40px 20px;
+.nav-left a{
+font-size:14px;
 }
+
+/* PAGE */
+
+.page-container{
+padding:100px 20px 30px;
+}
+
+/* CARDS */
 
 .cards{
 grid-template-columns:1fr;
+padding-bottom: 40px;
 }
 
-.dashboard{
+/* FORMS */
+
+.form-wrapper,
+.form-wrapper-2,
+.login-wrapper{
+padding:5px;
+}
+
+.form-card,
+.Register,
+.login-card,
+.debt-form-card{
+width:100%;
+padding:28px;
+}
+
+/* TABLE */
+
+.activity table,
+.cashflow-table table,
+.debt-table table{
+font-size:14px;
+}
+
+th, td{
 padding:10px;
+}
+
+/* INFO CARD */
+
+.info-card{
+padding:24px;
+}
+
+.info-card p{
+font-size:16px;
+}
+
+}
+
+/* =========================
+SMALL MOBILE (≤480px)
+========================= */
+
+@media (max-width:480px){
+
+h1{
+font-size:22px;
+}
+
+h2{
+font-size:20px;
+}
+
+h3{
+font-size:18px;
+}
+
+/* NAV LINKS STACK */
+
+.nav-left{
+flex-direction:column;
+align-items:center;
+}
+
+/* BUTTONS */
+
+.btn,
+.login-btn,
+.submit-btn,
+.filter-btn{
+width:100%;
+}
+
+/* TABLE SCROLL FIX */
+
+.activity,
+.cashflow-table,
+.debt-table{
+overflow-x:auto;
+}
+
+/* CARD PADDING */
+
+.card{
+padding:22px;
+}
+
+.amount{
+font-size:26px;
+}
+
+/* FORM */
+
+input,
+textarea,
+select{
+font-size:14px;
+}
+
+}
+@media (max-width:768px){
+
+.navbar{
+flex-direction:row;
+padding:12px 18px;
+
+}
+
+/* hide menu by default */
+.nav-left{
+position:absolute;
+top:70px;
+left:0;
+width:100%;
+
+background:rgba(20,20,20,0.95);
+backdrop-filter:blur(16px);
+
+flex-direction:column;
+align-items:center;
+gap:20px;
+
+padding:20px 0;
+
+display:none;
+}
+
+/* show when active */
+.nav-left.active{
+display:flex;
+}
+
+}
+.menu-toggle{
+display:none;
+font-size:22px;
+color:#00ff88;
+cursor:pointer;
+}
+
+@media (max-width:768px){
+.menu-toggle{   
+display:block;
 }
 
 }

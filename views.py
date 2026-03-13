@@ -45,7 +45,7 @@ def home():
                 total_transactions = 0
         except Exception as e:
             total_transactions = 0
-        return render_template("home.html", total_expense=total_expenses[0],recent_expenses=expenses, you_owe=you_owe[0],owed_to_you=owed_to_you[0], total_transactions=total_transactions[0]) 
+        return render_template("home.html", total_expense=total_expenses[0],recent_expenses = expenses[:5], you_owe=you_owe[0],owed_to_you=owed_to_you[0], total_transactions=total_transactions[0]) 
     return render_template("home.html")
 
 @auth.route('/login',methods=["GET","POST"])
