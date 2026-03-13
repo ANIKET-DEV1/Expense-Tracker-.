@@ -1,70 +1,134 @@
 {% extends "base.html" %}
-{% block title %}Debt Management{% endblock title %}
+{% block title %}Settlements{% endblock %}
+
 {% block content %}
-    <h2>Debt Management</h2>
-    <p>This is the Debt Management page. You can manage your debts here.</p>
-<h2>ADD DEBT<h2>
-    <form method="POST" action="{{ url_for('view.debt_management') }}">
-      <label for="personName">Person Name:</label>
-    <input type="text" id="personName" name="personName" required>
-      <label for="Amount">Amount:</label>
-    <input type="number" id="Amount" name="Amount" step=0.01 required>
-      <label for="Debttype">Select to DebtType:</label>
-        <select id="Debttype" name="Debttype" required>
-            <option value="lent" {% if selected == 'lent'%}selected{% endif %}>Lent</option>
-            <option value="borrowed" {% if selected == 'borrowed' %}selected{% endif %}>Borrowed</option>
-        </select>
-        <label for="DebtStatus">Select to Debt Status:</label>
-        <select id="DebtStatus" name="DebtStatus" required>
-            <option value="paid" {% if selected == 'paid'%}selected{% endif %}>Paid</option>
-            <option value="pending" {% if selected == 'pending'%}selected{% endif %}>Pending</option>
-        </select>
-        <label for="DebtDate">DebtDate:</label>
-        <input type="date" id="DebtDate" name="DebtDate" required><br><br>
-        {% if error %}
-        <p style="color: red;" class="Errors">{{ error }}</p>
-        {% endif %}
-        <input type="submit" value="Add Debt">
-    </form>
-    {% if  debts %}
-      <h2>Pending Debts</h2>
-      <table border="1">
-        <tr>
-            <th>Debt ID</th>
-            <th>Person Name</th>
-            <th>Amount</th>
-            <th>Debt Type</th>
-            <th>Debt Status</th>
-            <th>Debt Date</th>
-            <th>Change Status</th>
-            <th>Actions</th>
-        </tr>
-    {% for d in debts %}
-      <tr>
-        <td>{{ d[0] }}</td>
-        <td>{{ d[1] }}</td>
-        <td>₹{{ d[2] }}</td>
-        <td>{{ d[3] }}</td>
-        <td>{{ d[4] }}</td>
-        <td>{{ d[5] }}</td>
-        <td>
-          {% if d[4]=="paid"%}
-            <form action="{{ url_for('view.change_debt', debt_id=d[0]) }}" method="POST" style="display:inline;">
-            <button type="submit" class="Change">Pending</button>
-              </form>
-          {% else %}
-              <form action="{{ url_for('view.change_debt', debt_id=d[0]) }}" method="POST" style="display:inline;">
-            <button type="submit" class="Change">Paid</button>
-          </form>
-          {% endif %}
-        </td>
-        <td>
-          <form action="{{ url_for('view.delete_debt', debt_id=d[0]) }}" method="POST" style="display:inline;">
-            <button type="submit" class="delbtn">Delete</button>
-          </form>
-          </td>
-      </tr>
-    {% endfor %}
-    {% endif %}
+
+<div class="info-card">
+
+<h2>About Settlements</h2>
+
+<p>
+Settlements help you track money you have <strong>lent</strong> to others
+or <strong>borrowed</strong> from someone. This allows you to keep a clear
+record of balances between you and others.
+</p>
+
+<h3>How to Use</h3>
+
+<ul>
+<li>Add a settlement record below.</li>
+<li>Select whether the money was <strong>lent</strong> or <strong>borrowed</strong>.</li>
+<li>Update the status when the payment is completed.</li>
+<li>Track all settlements in the table below.</li>
+</ul>
+
+<h3>Create a Settlement:</h3>
+<br>
+
+<div class="form-wrapper-2">
+
+<div class="form-card">
+
+<h2>Add Settlement</h2>
+
+<form method="POST" action="{{ url_for('view.debt_management') }}">
+
+<label for="personName">Person Name</label>
+<input type="text" id="personName" name="personName" required>
+
+<label for="Amount">Amount</label>
+<input type="number" id="Amount" name="Amount" step="0.01" required>
+
+<label for="Debttype">Type</label>
+<select id="Debttype" name="Debttype" required>
+<option value="lent">Lent</option>
+<option value="borrowed">Borrowed</option>
+</select>
+
+<label for="DebtStatus">Status</label>
+<select id="DebtStatus" name="DebtStatus"  required>
+<option value="pending">Pending</option>
+<option value="paid">Paid</option>
+</select>
+
+<label for="DebtDate">Date</label>
+<input type="date" id="DebtDate" name="DebtDate" required>
+
+{% if error %}
+<p class="Errors">{{ error }}</p>
+{% endif %}
+
+<button type="submit" class="submit-btn">Add Settlement</button>
+
+</form>
+
+</div>
+
+</div>
+
+</div>
+
+
+{% if debts %}
+
+<div class="activity">
+
+<h2>Settlement Records</h2>
+
+<table>
+
+<tr>
+<th>ID</th>
+<th>Person</th>
+<th>Amount</th>
+<th>Type</th>
+<th>Status</th>
+<th>Date</th>
+<th>Change</th>
+<th>Action</th>
+</tr>
+
+{% for d in debts %}
+
+<tr>
+
+<td>{{ d[0] }}</td>
+<td>{{ d[1] }}</td>
+<td>₹{{ d[2] }}</td>
+<td>{{ d[3] }}</td>
+<td>{{ d[4] }}</td>
+<td>{{ d[5] }}</td>
+
+<td>
+
+<form action="{{ url_for('view.change_debt', debt_id=d[0]) }}" method="POST">
+
+{% if d[4] == "paid" %}
+<button class="change-btn">Pending</button>
+{% else %}
+<button class="change-btn">Paid</button>
+{% endif %}
+
+</form>
+
+</td>
+
+<td>
+
+<form action="{{ url_for('view.delete_debt', debt_id=d[0]) }}" method="POST">
+<button class="delbtn">Delete</button>
+</form>
+
+</td>
+
+</tr>
+
+{% endfor %}
+
+</table>
+
+</div>
+
+{% endif %}
 
 {% endblock %}

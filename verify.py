@@ -25,39 +25,6 @@ class operation():
                 return 4
         return True
             
-   
-
-         
-    def monthly_expense(self,userID):
-        choice = input("Press ENTER for current month or type 'custom': ")
-        if choice == "":
-            today = date.today()
-            month = today.month
-            year = today.year
-        else:
-            month = int(input("Month (1-12): "))
-            year = int(input("Year (YYYY): "))
-        try:
-
-            rows=self.db.month_Expenses(userID,month,year)
-            if rows:
-                print(f"\n\n{'='*10} Monthly Report {'='*10}")
-                print('-'*40)
-                print(f"{'Categories':<15} {'Amount':>20}")
-                print('-'*40)
-                for r in rows:
-                      print(f"{r[0]:<15} {r[1]:>20}₹")
-                total = sum(r[1] for r in rows)
-                print("-" * 40)
-                print(f"{'Total':<30} {total:.2f}₹")
-                print("-" * 40) 
-            else:
-                 print("\nNo data Found!")
-                
-
-        except Exception as e:
-             print('Error:',e)
-
 
     def add_debt(self, user_id,person_name, amount, debt_type, debt_status, date_input):
             try:
@@ -78,50 +45,6 @@ class operation():
             if not person_name.strip():
                 return 3
 
-    def Mark_debt(self, userID):
-        try:
-            debtId = int(input("Enter DebtID: "))
-
-            debt = self.db.get_debt_by_id(debtId,userID) 
-            if not  debt:
-                print("DebtID not found")
-                return
-
-            print(
-                f"Debt details:\n"
-                f"DebtID: {debt[0]}\n"
-                f"Person: {debt[1]}\n"
-                f"Amount: {debt[2]}\n"
-                f"Debt Type: {debt[3]}\n"
-                f"Debt Status: {debt[4]}\n"
-                f"Date: {debt[5]}"
-            )
-            if debt[4] == 'paid':
-                print("It's already paid")
-                return
-            check = input("Mark this debt as PAID? (Y/N): ").strip().lower()
-            if check == 'y':
-                self.db.update_debt(debtId, userID)
-                print("Debt marked as paid")
-            else:
-                print("Operation cancelled")
-
-        except ValueError:
-            print("Invalid DebtID")
-        except Exception as e:
-            print("mark_debt error:", e)
-    
-    def view_cate(self,userID):
-        try:
-            row=self.db.view_category(userID)
-            if row:
-                print(f"\nYour Categories:")
-                for r in row:
-                    print(r[0])
-            else:
-                print("No data Found! ")
-        except Exception as e:
-            print("view_Category:",e)
         
                     
 

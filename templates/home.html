@@ -1,14 +1,84 @@
 {% extends "base.html" %}
-{% block title %}Home{% endblock title %}
+{% block title %}Dashboard{% endblock %}
 
 {% block content %}
-<h1>Home</h1>
-<p>Welcome to the home page!</p>
 {% if session.get("username") %}
-    <p>Hello, {{ session.get("username") }}! You are logged in.</p>
-    <a href="/logout">Logout</a>
+
+<div class="dashboard">
+
+<h1>Dashboard</h1>
+<p class="sub">Your personal expense overview</p>
+
+
+<div class="cards">
+
+<div class="card">
+<h3>Total Expenses</h3>
+<p class="amount">₹ {{ total_expense }}</p>
+</div>
+
+<div class="card">
+<h3>You Owe</h3>
+<p class="amount owe">₹ {{ you_owe }}</p>
+</div>
+
+<div class="card">
+<h3>Owed To You</h3>
+<p class="amount receive">₹ {{ owed_to_you }}</p>
+</div>
+
+<div class="card">
+<h3>Total Transactions</h3>
+<p class="amount">{{ total_transactions }}</p>
+</div>
+
+</div>
+
+
+<div class="activity">
+
+<h2>Recent Expenses</h2>
+
+<table>
+
+<tr>
+<th>Date</th>
+<th>Title</th>
+<th>Amount</th>
+<th>Tag</th>
+</tr>
+
+{% for e in recent_expenses %}
+<tr>
+<td>{{ e[4] }}</td>
+<td>{{ e[2] }}</td>
+<td>₹{{ e[3] }}</td>
+<td>{{ e[1] }}</td>
+</tr>
 {% else %}
-    <p>You are not logged in. Please <a href="/login">login</a> or <a href="/register">register</a>.</p>
+        <tr>
+            <td colspan="6" style="text-align: center;">No expenses found.</td>
+        </tr>
+{% endfor %}
+
+
+</table>
+
+</div>
+
+</div>
+
+{% else %}
+
+<div class="login-message">
+
+<h1>ExpenseFlow</h1>
+<p>Please login to access your financial dashboard.</p>
+
+<a href="/login" class="btn">Login</a>
+
+</div>
+
 {% endif %}
 
-{% endblock content %}
+{% endblock %}

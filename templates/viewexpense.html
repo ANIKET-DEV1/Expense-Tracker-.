@@ -1,60 +1,81 @@
 {% extends "base.html" %}
 {% block title %}Cashflow{% endblock %}
+
 {% block content %}
-    <h2> Cashflow </h2>
-    
-    {% if error %}
-        <p style="color: red;">{{ error }}</p>
-    {% endif %}
 
-    <form action="{{ url_for('view.cashflow') }}" method="GET" style="margin-bottom: 20px;">
-        <label for="Wise">Select to view:</label>
-        
-        <select id="Wise" name="Wise" required>
-            <option value="all" {% if selected == 'all' or not selected %}selected{% endif %}>ALL</option>
-            <option value="1" {% if selected == '1' %}selected{% endif %}>January</option>
-            <option value="2" {% if selected == '2' %}selected{% endif %}>February</option>
-            <option value="3" {% if selected == '3' %}selected{% endif %}>March</option>
-            <option value="4" {% if selected == '4' %}selected{% endif %}>April</option>
-            <option value="5" {% if selected == '5' %}selected{% endif %}>May</option>
-            <option value="6" {% if selected == '6' %}selected{% endif %}>June</option>
-            <option value="7" {% if selected == '7' %}selected{% endif %}>July</option>
-            <option value="8" {% if selected == '8' %}selected{% endif %}>August</option>
-            <option value="9" {% if selected == '9' %}selected{% endif %}>September</option>
-            <option value="10" {% if selected == '10' %}selected{% endif %}>October</option>
-            <option value="11" {% if selected == '11' %}selected{% endif %}>November</option>
-            <option value="12" {% if selected == '12' %}selected{% endif %}>December</option>
-        </select>
-        
-        <button type="submit">Filter</button>
-    </form>
+<h2>Cashflow</h2>
 
-    <table border="1">
-        <tr>
-            <th>Expense ID</th>
-            <th>Description</th>
-            <th>Amount</th>
-            <th>Category</th>
-            <th>Date</th>
-            <th>Actions</th>
-        </tr>
-        
-        {% for expense in expenses %}
-        <tr>
-            <td>{{ expense[0] }}</td>
-            <td>{{ expense[2] }}</td> 
-            <td>₹{{ expense[3] }}</td>
-            <td>{{ expense[1] }}</td> 
-            <td>{{ expense[4] }}</td> 
-            <td>
-                <form action="{{ url_for('view.delete', expense_id=expense[0]) }}" method="POST" style="display:inline;">
-                    <button type="submit" class="delbtn">Delete</button>
-                </form>
-            </td>
-        </tr>
-        {% else %}
-        <tr>
-            <td colspan="6" style="text-align: center;">No expenses found.</td>
-        </tr>
-        {% endfor %}
-    </table> {% endblock %}
+{% if error %}
+<p style="color:red;">{{ error }}</p>
+{% endif %}
+
+<form action="{{ url_for('view.cashflow') }}" method="GET" class="cashflow-filter">
+
+<label for="Wise">Select to view:</label>
+
+<select id="Wise" name="Wise" required>
+
+<option value="all" {% if selected == 'all' or not selected %}selected{% endif %}>ALL</option>
+<option value="1" {% if selected == '1' %}selected{% endif %}>January</option>
+<option value="2" {% if selected == '2' %}selected{% endif %}>February</option>
+<option value="3" {% if selected == '3' %}selected{% endif %}>March</option>
+<option value="4" {% if selected == '4' %}selected{% endif %}>April</option>
+<option value="5" {% if selected == '5' %}selected{% endif %}>May</option>
+<option value="6" {% if selected == '6' %}selected{% endif %}>June</option>
+<option value="7" {% if selected == '7' %}selected{% endif %}>July</option>
+<option value="8" {% if selected == '8' %}selected{% endif %}>August</option>
+<option value="9" {% if selected == '9' %}selected{% endif %}>September</option>
+<option value="10" {% if selected == '10' %}selected{% endif %}>October</option>
+<option value="11" {% if selected == '11' %}selected{% endif %}>November</option>
+<option value="12" {% if selected == '12' %}selected{% endif %}>December</option>
+
+</select>
+
+<button type="submit" class="filter-btn">Filter</button>
+
+</form>
+
+
+<div class="cashflow-table">
+
+<table>
+
+<tr>
+<th>ID</th>
+<th>Description</th>
+<th>Amount</th>
+<th>Category</th>
+<th>Date</th>
+<th>Action</th>
+</tr>
+
+{% for expense in expenses %}
+
+<tr>
+<td>{{ expense[0] }}</td>
+<td>{{ expense[2] }}</td>
+<td>₹{{ expense[3] }}</td>
+<td>{{ expense[1] }}</td>
+<td>{{ expense[4] }}</td>
+
+<td>
+<form action="{{ url_for('view.delete', expense_id=expense[0]) }}" method="POST">
+<button type="submit" class="delbtn">Delete</button>
+</form>
+</td>
+
+</tr>
+
+{% else %}
+
+<tr>
+<td colspan="6" style="text-align:center;">No expenses found.</td>
+</tr>
+
+{% endfor %}
+
+</table>
+
+</div>
+
+{% endblock %}

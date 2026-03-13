@@ -1,14 +1,53 @@
 {% extends "base.html" %}
-{% block title %} Tags Manager{% endblock title %}
+{% block title %}Tags Manager{% endblock %}
+
 {% block content %}
-    <h2>Add Expense</h2>
-    <form method="POST" action="/TagsManager">
-    <label for="categoryname">New Category Name:</label>
-    <input type="text" id="categoryname" name="categoryname" placeholder="e.g., Utilities, Groceries" required>
-    {% if error %}
-        <p style="color: red;" class="Errors">{{ error }}</p>
-    {% endif %}
-    <button type="submit">Add Category</button>
+
+<div class="info-card">
+
+<h2>About Tags</h2>
+
+<p>
+Tags help you organize your expenses into categories such as
+<strong>Groceries</strong>, <strong>Transport</strong>, or <strong>Utilities</strong>.
+This makes it easier to understand where your money is going.
+</p>
+
+<h3>How to Use Tags</h3>
+
+<ul>
+<li>Create a tag below (example: Food, Bills, Shopping).</li>
+<li>Select the tag when adding an expense.</li>
+<li>View spending by category in your dashboard.</li>
+</ul>
+
+<h3>Create your Tags:</h3>
+<div class="form-wrapper-2">
+
+<div class="form-card">
+
+<h2>Add Tag</h2>
+
+<form method="POST" action="/TagsManager">
+
+<label for="categoryname">New Category Name:</label>
+
+<input type="text"
+id="categoryname"
+name="categoryname"
+placeholder="e.g., Utilities, Groceries"
+required>
+
+{% if error %}
+<p class="Errors">{{ error }}</p>
+{% endif %}
+
+<button type="submit" class="submit-btn">Add Category</button>
+
 </form>
+</div>
+</div>
+
+</div>
 
 {% endblock %}

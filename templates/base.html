@@ -1,12 +1,78 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block title %}{% endblock %}</title>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>{% block title %}{% endblock %}</title>
+
+<link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 </head>
+
 <body>
-    {% block content %}
-    {% endblock content %}
+<div class="navbar">
+<div class="nav-left">
+<a href="/">Dashboard</a>
+<a href="/Add-Expense">Expenses</a>
+<a href="/TagsManager">Tags</a>
+<a href="/cashflow">Cashflow</a>
+<a href="/debtmanagement">Settlement</a>
+</div>
+
+<div class="nav-right">
+
+{% if session.get("username") %}
+<span class="user">Welcome {{ session.get("username") }}</span>
+<a href="/logout">Logout</a>
+{% else %}
+<a href="/login">Login</a>
+{% endif %}
+
+</div>
+</div>
+<div class="page-container">
+{% block content %}
+{% endblock %}
+</div>
+
+<footer class="footer">
+
+<p>© 2026 ExpenseFlow | Built by Aniket Gupta</p>
+
+<div class="footer-links">
+
+<a href="https://github.com/ANIKET-DEV1" target="_blank">
+<i class="fa-brands fa-github"></i>
+</a>
+
+<a href="mailto:ailag9326107@gmail.com">
+<i class="fa-solid fa-envelope"></i>
+</a>
+
+<a href="https://www.linkedin.com/in/aniket-gupta-57378b326/" target="_blank">
+<i class="fa-brands fa-linkedin"></i>
+</a>
+
+</div>
+
+</footer>
+<script>
+
+window.addEventListener("scroll", function(){
+
+const navbar = document.querySelector(".navbar");
+
+if(window.scrollY > 40){
+navbar.classList.add("shrink");
+}else{
+navbar.classList.remove("shrink");
+}
+
+});
+
+</script>
 </body>
 </html>

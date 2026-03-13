@@ -186,10 +186,10 @@ class Helper:
     def view_Expenses(self,userID):
         try: 
             query='''Select e.expenseID,c.cName,e.description,e.Amount,e.expenseDate from expenses e
-                    inner join category c
-                    on e.cID=c.cID
-                    where e.userID=%s
-                    order by expenseDate Desc'''
+                        inner join category c
+                        on e.cID=c.cID
+                        where e.userID=%s
+                        order by expenseDate Desc'''
             cur=self.db.cursor()
             cur.execute(query,(userID,))
             rows = cur.fetchall()
@@ -344,3 +344,52 @@ class Helper:
         result=cur.fetchall()
         cur.close()
         return result
+    
+    def get_borrowed(self,userID):
+        try:
+            cur=self.db.cursor()
+            query='''Select sum(amount) from debt where userID=%s and debtType='borrowed' and debtStatus='pending' '''
+            cur.execute(query,(userID,))
+            row=cur.fetchone()
+            return row
+        except Exception as e:
+            print('get_borrowed: ',e)
+            return False
+        finally:
+            cur.close()
+    def get_lent(self,userID):
+        try:
+            cur=self.db.cursor()
+            query='''Select sum(amount) from debt where userID=%s and debtType='lent' and debtStatus='pending' '''
+            cur.execute(query,(userID,))
+            row=cur.fetchone()
+            return row
+        except Exception as e:
+            print('get_lent: ',e)
+            return False
+        finally:
+            cur.close()
+    def total_expense(self,userID):
+        try:
+            cur = self.db.cursor()
+            query="Select SUM(Amount) from expenses where userID=%s"
+            cur.execute(query,(userID,))
+            result=cur.fetchone()
+            return result
+        except Exception as e:
+            print("Database error")
+            return False
+        finally:
+            cur.close()
+    def total_transactions(self,userID):
+        try:
+            cur = self.db.cursor()
+            query="Select COUNT(*) from expenses where userID=%s"
+            cur.execute(query,(userID,))
+            result=cur.fetchone()
+            return result
+        except Exception as e:
+            print("Database error")
+            return False
+        finally:
+            cur.close()

@@ -1,3 +1,5 @@
+from calendar import month
+
 from flask import Blueprint,render_template, request,session,redirect,url_for
 from .new import Helper
 from datetime import datetime,date
@@ -8,7 +10,42 @@ auth=Blueprint('auth',__name__)
 helper = Helper()
 opera=operation()
 @view.route('/',methods=["GET","POST"])
+@view.route('/dashboard',methods=["GET","POST"])
 def home():
+    if "user_id" in session:
+        expenses = []
+        month = datetime.now().month
+        # total_expenses=0.0
+        year = datetime.now().year
+        try:
+            expenses = helper.month_Expenses(session["user_id"], month, year)
+        except Exception as e:
+            expenses = []
+        try:
+            total_expenses = helper.total_expense(session["user_id"])
+            if total_expenses is None:
+                total_expenses = 0.0
+        except Exception as e:
+            total_expenses = - 1
+        try:
+            you_owe = helper.get_borrowed(session["user_id"])
+            if you_owe is None:
+                you_owe = 0.0
+        except Exception as e:
+            you_owe = 0.0
+        try:
+            owed_to_you = helper.get_lent(session["user_id"])
+            if owed_to_you is None:
+                owed_to_you = 0.0
+        except Exception as e:
+            owed_to_you = 0.0
+        try :
+            total_transactions = helper.total_transactions(session["user_id"])
+            if total_transactions is None:
+                total_transactions = 0
+        except Exception as e:
+            total_transactions = 0
+        return render_template("home.html", total_expense=total_expenses[0],recent_expenses=expenses, you_owe=you_owe[0],owed_to_you=owed_to_you[0], total_transactions=total_transactions[0]) 
     return render_template("home.html")
 
 @auth.route('/login',methods=["GET","POST"])
@@ -51,7 +88,7 @@ def register():
 @auth.route('/logout')
 def logout():
     session.clear()
-    return redirect(url_for("auth.login"))
+    return redirect(url_for("view.home"))
 
 @view.route('/Add-Expense',methods=["GET","POST"])
 def add_expenses():
@@ -124,7 +161,6 @@ def cashflow():
         return render_template("viewexpense.html", expenses=expenses)
     return redirect(url_for("auth.login"))
 
-@view.route('/debtmanagement',methods=['GET','POST'])
 @view.route('/debtmanagement', methods=['GET', 'POST'])
 def debt_management():
     if "user_id" in session:

@@ -1,26 +1,66 @@
 {% extends "base.html" %}
-{% block title %}New Spend{% endblock %}
+{% block title %}Add Expense{% endblock %}
+
 {% block content %}
-    <h2>Add Expense</h2>
-    <form method="POST" action="/Add-Expense">
-        <label for="description">Description:</label>
-        <textarea id="description" name="description" required></textarea><br><br>
-        <label for="category">Category:</label>
-        <select id="category" name="category" required>
-            <option value="">Select a category</option>
-            {% for category in categories %}
-                <option value="{{ category }}">{{ category }}</option>
-            {% endfor %}
-            <br><br>
-        </select><br><br>
-        <label for="amount">Amount:</label>
-        <input type="number" id="amount" name="amount" step="0.01" required><br><br>
-        <label for="expenseDate">Date:</label>
-        <input type="date" id="expenseDate" name="expenseDate" required><br><br>
-        <input type="submit" value="Add Expense">
-        {% if error %}
-            <p style="color: red;" class="Errors">{{ error }}</p>
-        {% endif %}
-    </form>
-    
+
+<div class="info-card">
+
+<h2>About Expenses</h2>
+
+<p>
+Expenses help you track where your money goes. By recording every
+purchase or payment, you can better understand your spending habits
+and manage your finances effectively.
+</p>
+
+<h3>How to Use</h3>
+
+<ul>
+<li>Add a description of the expense.</li>
+<li>Select the category that best fits the purchase.</li>
+<li>Enter the amount and the date of the transaction.</li>
+<li>The expense will appear in your dashboard and cashflow records.</li>
+</ul>
+
+<h3>Add New Expense</h3>
+
+<div class="form-wrapper-2">
+
+<div class="form-card">
+
+<h2>Add Expense</h2>
+
+<form method="POST" action="/Add-Expense">
+
+<label for="description">Description</label>
+<textarea id="description" name="description" required></textarea>
+
+<label for="category">Category</label>
+<select id="category" name="category" required>
+<option value="">Select a category</option>
+{% for category in categories %}
+<option value="{{ category }}">{{ category }}</option>
+{% endfor %}
+</select>
+
+<label for="amount">Amount</label>
+<input type="number" id="amount" name="amount" step="0.01" required>
+
+<label for="expenseDate">Date</label>
+<input type="date" id="expenseDate" name="expenseDate" required>
+
+{% if error %}
+<p class="Errors">{{ error }}</p>
+{% endif %}
+
+<button type="submit" class="submit-btn">Add Expense</button>
+
+</form>
+
+</div>
+
+</div>
+
+</div>
+
 {% endblock %}
